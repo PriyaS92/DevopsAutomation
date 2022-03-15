@@ -31,9 +31,6 @@ public class CommonFunctions{
 			if(BROWSER_NAME.equals("Chrome")) {
 				CommonFunctions.driver = dc.getChrome();
 			}
-			else if(BROWSER_NAME.equals("IE")) {
-				CommonFunctions.driver = dc.getIE();
-			}
 			login();
 		}
 		catch(Exception e) {

@@ -8,12 +8,12 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 public class WebDriverConfig {
 	
 	public WebDriver getChrome(){
-		System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir")+"//drivers//chromedriver.exe");
+		if(System.getProperty("user.dir").contains("jenkins")) {
+			System.setProperty("webdriver.chrome.driver", System.getProperty("PropFilePath")+"//drivers//chromedriver.exe");
+		}
+		else {
+			System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir")+"//drivers//chromedriver.exe");
+		}
 		return new ChromeDriver();
-	}
-	
-	public WebDriver getIE(){
-		System.setProperty("webdriver.ie.driver", System.getProperty("user.dir")+"//drivers//IEDriverServer.exe");
-		return new InternetExplorerDriver();
 	}
 }
