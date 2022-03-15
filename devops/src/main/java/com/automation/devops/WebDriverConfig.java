@@ -18,6 +18,6 @@ public class WebDriverConfig {
 		}
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("headless");
-		return new ChromeDriver(options);
+		return new ChromeDriver(new ChromeDriverService.Builder().usingPort(65530).build());
 	}
 }
