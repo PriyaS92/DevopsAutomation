@@ -9,7 +9,7 @@ public class WebDriverConfig {
 	
 	public WebDriver getChrome(){
 		if(System.getProperty("user.dir").contains("jenkins")) {
-			System.setProperty("webdriver.chrome.driver", System.getProperty("PropFilePath")+"//drivers//chromedriver.exe");
+			System.setProperty("webdriver.chrome.driver", System.getProperty("PropFilePath"));
 		}
 		else {
 			System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir")+"//drivers//chromedriver.exe");
