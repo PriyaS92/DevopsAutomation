@@ -73,7 +73,7 @@ public class Homepage extends CommonFunctions{
 	public void validate_searchresults() {
 		try {
 			cf.viewelement(items_count);
-			String count = items_count.getText().trim().split("of")[1].split(" ")[0];
+			String count = items_count.getText().trim().split("of")[1].trim().split(" ")[0];
 			int count_val = Integer.parseInt(count);
 			for(int i=1;i<count_val+1;i++) {
 				String product_name = driver.findElement(By.xpath("//*[@id='center_column']/ul/li["+i+"]/div/div[2]/h5/a")).getText().trim();
