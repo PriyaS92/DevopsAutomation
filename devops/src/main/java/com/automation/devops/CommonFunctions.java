@@ -15,11 +15,15 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
+import com.amazonaws.services.ec2.model.CreateSecurityGroupRequest;
+import com.amazonaws.services.ec2.model.CreateSecurityGroupResult;
 import com.amazonaws.services.ec2.model.DescribeInstanceStatusRequest;
 import com.amazonaws.services.ec2.model.DescribeInstanceStatusResult;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.InstanceState;
+import com.amazonaws.services.ec2.model.IpPermission;
+import com.amazonaws.services.ec2.model.IpRange;
 import com.amazonaws.services.ec2.model.MonitorInstancesRequest;
 import com.amazonaws.services.ec2.model.Reservation;
 import com.amazonaws.services.ec2.model.StartInstancesRequest;
@@ -127,10 +131,6 @@ public class CommonFunctions{
 					  .withRegion(Regions.AP_SOUTH_1)
 					  .build();
 			
-			//Starting an instance
-			StartInstancesRequest startInstancesRequest = new StartInstancesRequest().withInstanceIds(util.getpropdata("ec2_instanceid"));
-			ec2Client.startInstances(startInstancesRequest);
-			
 			// Monitoring the instance request
 			MonitorInstancesRequest monitorInstancesRequest = new MonitorInstancesRequest()
 					  .withInstanceIds(util.getpropdata("ec2_instanceid"));
@@ -158,9 +158,6 @@ public class CommonFunctions{
 		try {
 			UnmonitorInstancesRequest unmonitorInstancesRequest = new UnmonitorInstancesRequest().withInstanceIds(util.getpropdata("ec2_instanceid"));
 			ec2Client.unmonitorInstances(unmonitorInstancesRequest);
-			
-			StopInstancesRequest stopInstancesRequest = new StopInstancesRequest().withInstanceIds(util.getpropdata("ec2_instanceid"));
-			ec2Client.stopInstances(stopInstancesRequest);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
