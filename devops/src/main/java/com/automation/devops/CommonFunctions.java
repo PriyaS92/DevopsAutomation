@@ -131,6 +131,10 @@ public class CommonFunctions{
 					  .withRegion(Regions.AP_SOUTH_1)
 					  .build();
 			
+			//Starting an instance
+			StartInstancesRequest startInstancesRequest = new StartInstancesRequest().withInstanceIds(util.getpropdata("ec2_instanceid"));
+			ec2Client.startInstances(startInstancesRequest);
+			
 			// Monitoring the instance request
 			MonitorInstancesRequest monitorInstancesRequest = new MonitorInstancesRequest()
 					  .withInstanceIds(util.getpropdata("ec2_instanceid"));
@@ -158,6 +162,9 @@ public class CommonFunctions{
 		try {
 			UnmonitorInstancesRequest unmonitorInstancesRequest = new UnmonitorInstancesRequest().withInstanceIds(util.getpropdata("ec2_instanceid"));
 			ec2Client.unmonitorInstances(unmonitorInstancesRequest);
+			
+			StopInstancesRequest stopInstancesRequest = new StopInstancesRequest().withInstanceIds(util.getpropdata("ec2_instanceid"));
+			ec2Client.stopInstances(stopInstancesRequest);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
