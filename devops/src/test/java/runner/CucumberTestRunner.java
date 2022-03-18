@@ -2,6 +2,7 @@ package runner;
 
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -12,8 +13,8 @@ import io.cucumber.testng.FeatureWrapper;
 import io.cucumber.testng.PickleWrapper;
 import io.cucumber.testng.TestNGCucumberRunner;
 
-@CucumberOptions(features = "src/test/resources/features",
-		glue = {"stepdefinitions","hooks"},
+@CucumberOptions(features = "classpath:features",
+		glue = {"stepdefinitions","hooks","reports"},
 		tags = "@functionaltest",
 		plugin = {
 				"pretty",
@@ -26,6 +27,11 @@ import io.cucumber.testng.TestNGCucumberRunner;
 public class CucumberTestRunner extends CommonFunctions{
 	private TestNGCucumberRunner testNGCucumberRunner;
 	FeatureWrapper cucumberFeatures;
+	
+	@BeforeSuite()
+	public void health_validation() {
+		this.monitorstatus_ec2win();
+	}
 	
 	@BeforeClass(alwaysRun = true)
     public void setUpClass() throws Exception {

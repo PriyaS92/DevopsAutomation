@@ -1,7 +1,6 @@
 package com.automation.devops;
 
 import java.util.concurrent.TimeUnit;
-
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,7 +10,26 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
+import com.amazonaws.services.ec2.model.DescribeInstanceStatusRequest;
+import com.amazonaws.services.ec2.model.DescribeInstanceStatusResult;
+import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
+import com.amazonaws.services.ec2.model.DescribeInstancesResult;
+import com.amazonaws.services.ec2.model.InstanceState;
+import com.amazonaws.services.ec2.model.MonitorInstancesRequest;
+import com.amazonaws.services.ec2.model.Reservation;
+import com.amazonaws.util.EC2MetadataUtils;
 import com.automation.devops.config.Utilities;
+import com.amazonaws.services.health.AWSHealth;
+import com.amazonaws.services.health.AWSHealthClient;
+import com.amazonaws.services.health.model.DescribeEventsRequest;
+import com.amazonaws.services.health.model.DescribeEventsResult;
+import com.amazonaws.services.health.model.Event;
+import com.amazonaws.services.health.model.EventFilter;
 
 public class CommonFunctions{
 	
@@ -93,5 +111,36 @@ public class CommonFunctions{
 	public void mousehover(WebElement e) {
 		a=new Actions(CommonFunctions.driver);
 		a.moveToElement(e).build().perform();
+	}
+	
+	public void monitorstatus_ec2win() {
+		try {
+			// create our EC2 client
+			BasicAWSCredentials awsCreds = new BasicAWSCredentials(System.getProperty("Accesskey"), System.getProperty("Secretkey"));
+			AmazonEC2 ec2Client = AmazonEC2ClientBuilder
+					  .standard()
+					  .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+					  .withRegion(Regions.AP_SOUTH_1)
+					  .build();
+			// Monitoring the instance request
+			MonitorInstancesRequest monitorInstancesRequest = new MonitorInstancesRequest()
+					  .withInstanceIds(util.getpropdata("ec2_instanceid"));
+			ec2Client.monitorInstances(monitorInstancesRequest);
+			
+			// Describing EC2 instance
+			DescribeInstancesRequest describeInstancesRequest = new DescribeInstancesRequest();
+			DescribeInstancesResult response = ec2Client.describeInstances(describeInstancesRequest);
+			DescribeInstanceStatusRequest describeInstanceRequest = new DescribeInstanceStatusRequest().withInstanceIds(util.getpropdata("ec2_instanceid"));
+		    DescribeInstanceStatusResult describeInstanceResult = ec2Client.describeInstanceStatus(describeInstanceRequest);
+		    
+			// Status check of windows ec2 instance 
+		    	System.out.println("EC2 Instance Platform: "+response.getReservations().get(0).getInstances().get(0).getPlatform().toString());
+				System.out.println("EC2 Instance State: "+response.getReservations().get(0).getInstances().get(0).getState().getName());
+				System.out.println("EC2 Instance Status: "+describeInstanceResult.getInstanceStatuses().get(0).getInstanceStatus().getDetails());
+				System.out.println("EC2 Instance System Status: "+describeInstanceResult.getInstanceStatuses().get(0).getSystemStatus().getDetails());
+		   }
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
