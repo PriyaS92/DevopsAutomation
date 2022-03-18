@@ -1,6 +1,7 @@
 package runner;
 
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
@@ -51,6 +52,11 @@ public class CucumberTestRunner extends CommonFunctions{
     @AfterClass(alwaysRun = true)
     public void tearDownClass() throws Exception {
     	testNGCucumberRunner.finish();
+    }
+    
+    @AfterSuite
+    public void shutdowninstance() {
+    	this.teardowninstance();
     }
     
 }

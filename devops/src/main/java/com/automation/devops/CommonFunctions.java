@@ -22,6 +22,9 @@ import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.InstanceState;
 import com.amazonaws.services.ec2.model.MonitorInstancesRequest;
 import com.amazonaws.services.ec2.model.Reservation;
+import com.amazonaws.services.ec2.model.StartInstancesRequest;
+import com.amazonaws.services.ec2.model.StopInstancesRequest;
+import com.amazonaws.services.ec2.model.UnmonitorInstancesRequest;
 import com.amazonaws.util.EC2MetadataUtils;
 import com.automation.devops.config.Utilities;
 import com.amazonaws.services.health.AWSHealth;
@@ -41,6 +44,7 @@ public class CommonFunctions{
 	public static String BROWSER_NAME;
 	public String Chrome_Path;
 	Actions a;
+	AmazonEC2 ec2Client;
 	
 	@BeforeMethod
 	public void setup() {
@@ -117,11 +121,16 @@ public class CommonFunctions{
 		try {
 			// create our EC2 client
 			BasicAWSCredentials awsCreds = new BasicAWSCredentials(System.getProperty("Accesskey"), System.getProperty("Secretkey"));
-			AmazonEC2 ec2Client = AmazonEC2ClientBuilder
+			ec2Client = AmazonEC2ClientBuilder
 					  .standard()
 					  .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
 					  .withRegion(Regions.AP_SOUTH_1)
 					  .build();
+			
+			//Starting an instance
+			StartInstancesRequest startInstancesRequest = new StartInstancesRequest().withInstanceIds(util.getpropdata("ec2_instanceid"));
+			ec2Client.startInstances(startInstancesRequest);
+			
 			// Monitoring the instance request
 			MonitorInstancesRequest monitorInstancesRequest = new MonitorInstancesRequest()
 					  .withInstanceIds(util.getpropdata("ec2_instanceid"));
@@ -135,10 +144,24 @@ public class CommonFunctions{
 		    
 			// Status check of windows ec2 instance 
 		    	System.out.println("EC2 Instance Platform: "+response.getReservations().get(0).getInstances().get(0).getPlatform().toString());
+		    	System.out.println("EC2 Instance Machine ID: "+response.getReservations().get(0).getInstances().get(0).getImageId().toString());
 				System.out.println("EC2 Instance State: "+response.getReservations().get(0).getInstances().get(0).getState().getName());
 				System.out.println("EC2 Instance Status: "+describeInstanceResult.getInstanceStatuses().get(0).getInstanceStatus().getDetails());
 				System.out.println("EC2 Instance System Status: "+describeInstanceResult.getInstanceStatuses().get(0).getSystemStatus().getDetails());
 		   }
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void teardowninstance() {
+		try {
+			UnmonitorInstancesRequest unmonitorInstancesRequest = new UnmonitorInstancesRequest().withInstanceIds(util.getpropdata("ec2_instanceid"));
+			ec2Client.unmonitorInstances(unmonitorInstancesRequest);
+			
+			StopInstancesRequest stopInstancesRequest = new StopInstancesRequest().withInstanceIds(util.getpropdata("ec2_instanceid"));
+			ec2Client.stopInstances(stopInstancesRequest);
+		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
