@@ -22,10 +22,6 @@ pipeline {
             }
         }
         stage('Test') {
-        	environment{
-        			Accesskeyid = "AKIAU4FD7IXZ2475T7W3"
-        			Secretkeyid = "zA4Tmob/J/Bi4C6MIobzMQga0wrAonWFK/kNuee3"
-        	}
         	steps{
         		script {
         		    	def props = readProperties file: 'devops/src/main/resources/application.properties'
