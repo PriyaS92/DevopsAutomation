@@ -10,18 +10,12 @@ pipeline {
         skipDefaultCheckout true 
     }
     stages {
-    	stage('Checkout Repository'){
+    	stage('Build'){
     		steps{
 					checkout scm
     		}		
     	}
-    	stage('Build') {
-    		steps{
-    			sh "git --version"
-        		sh "mvn --version"
-            }
-        }
-        stage('Test') {
+    	stage('Test') {
         	steps{
         		script {
         		    	def props = readProperties file: 'devops/src/main/resources/application.properties'
