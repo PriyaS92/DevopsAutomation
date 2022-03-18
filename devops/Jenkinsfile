@@ -18,8 +18,7 @@ pipeline {
     	stage('Test') {
         	steps{
         		script {
-        		    	def props = readProperties file: 'devops/src/main/resources/application.properties'
-        				sh "mvn -f devops/pom.xml clean test -DAccesskey==${Accesskeyid} -DSecretkey=${Secretkeyid}"
+        		    	sh "mvn -f devops/pom.xml clean test -DAccesskey==${Accesskeyid} -DSecretkey=${Secretkeyid}"
            		}
            	}
         }
