@@ -1,0 +1,38 @@
+#!groovy
+pipeline {
+   agent {
+       label 'built-in' // machine name
+    }
+    tools {
+        maven 'Default'
+    }
+    options {
+        skipDefaultCheckout true 
+    }
+    stages {
+    	stage('Checkout Repository'){
+    		steps{
+					checkout scm
+    		}		
+    	}
+    	stage('Build') {
+    		steps{
+        		sh "rm -rf .git"
+                sh "mvn --version"
+            }
+        }
+        stage('Test') {
+        	environment{
+        			Accesskeyid = "AKIAU4FD7IXZ2475T7W3"
+        			Secretkeyid = "zA4Tmob/J/Bi4C6MIobzMQga0wrAonWFK/kNuee3"
+        	}
+        	steps{
+        		script {
+        		    	def props = readProperties file: 'devops/src/main/resources/application.properties'
+        				sh "mvn -f devops/pom.xml clean test -DAccesskey==${Accesskeyid} -DSecretkey=${Secretkeyid}"
+           		}
+           	}
+        }
+	}
+}
+		
