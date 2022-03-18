@@ -18,7 +18,7 @@ pipeline {
     	stage('Test') {
         	steps{
         		script {
-        		    	sh "mvn -f devops/pom.xml clean test -DAccesskey==${Accesskeyid} -DSecretkey=${Secretkeyid}"
+        		    	bat "mvn -f devops/pom.xml clean test -DAccesskey==${Accesskeyid} -DSecretkey=${Secretkeyid}"
            		}
            	}
         }
