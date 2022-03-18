@@ -17,8 +17,8 @@ pipeline {
     	}
     	stage('Build') {
     		steps{
-        		sh "rm -rf .git"
-                sh "mvn --version"
+    			sh "git --version"
+        		sh "mvn --version"
             }
         }
         stage('Test') {
